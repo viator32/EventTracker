@@ -1,0 +1,13 @@
+== 3.0 Softwaremodellierung
+
+=== 3.1 Use-Case Diagramm
+.Use-Case Diagramm
+[.text-center]
+image::./image/UseCaseDiagramm.png[]
+
+
+=== 3.2 Klassendiagramm
+
+.Klassendiagramm
+[.text-center]
+image::./image/Klassendiagramm.png[]

@@ -1,0 +1,34 @@
+= Watchdog smart timetracker
+Anforderungsspezifikation
+Tanja Maier - Serhii Radkovskyi - Pascal Sauerstein | v1.0.0 | 29.10.2023
+:doctype: book
+:toc:
+:toc-title: Inhaltsverzeichnis
+:tabsize: 4
+
+[abstract]
+include::chapters/chapter01.adoc[leveloffset=0]
+
+// [abstract]
+// include::chapters/chapter02.adoc[leveloffset=0]
+
+// [abstract]
+// include::chapters/chapter03.adoc[leveloffset=0]
+
+// [abstract]
+// include::chapters/chapter04.adoc[leveloffset=0]
+
+// [abstract]
+// include::chapters/chapter05.adoc[leveloffset=0]
+
+[abstract]
+include::chapters/chapter06.adoc[leveloffset=0]
+
+[abstract]
+include::chapters/chapter07.adoc[leveloffset=0]
+
+[abstract]
+include::chapters/chapter08.adoc[leveloffset=0]
+
+// [abstract]
+// include::chapters/chapter09.adoc[leveloffset=0]

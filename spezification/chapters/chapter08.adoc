@@ -1,0 +1,31 @@
+== 4.0 Benutzeroberfläche
+
+=== 4.1 Mockup
+
+.Mockup: Kalender
+[.text-center]
+image::./image/UI.png[]
+
+.Mockup: Kalender mit geöffneter Sidebar
+[.text-center]
+image::./image/UISidebar.png[]
+
+.Mockup: Kalender mit Event Liste und Formula
+[.text-center]
+image::./image/UIEvents.png[]
+
+.Mockup: PopUp zum Informationen eintragen
+[.text-center]
+image::./image/UIPopUp.png[]
+
+.Mockup: Heatmap
+[.text-center]
+image::./image/UIHeatmapBrowser.png[]
+
+.Mockup: kleine Geräte
+[.text-center]
+image::./image/UIMobile.png[]
+
+.Mockup: Heatmap auf kleinen Geräten
+[.text-center]
+image::./image/UIHeatmapMobile.png[]

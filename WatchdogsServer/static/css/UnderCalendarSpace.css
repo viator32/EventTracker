@@ -1,0 +1,94 @@
+.under-calendar-container {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  padding: 0.2rem;
+  align-items: center;
+}
+
+.plus-button {
+  background-color: #3498db;
+  color: white;
+  font-size: 25px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: transform 1.5s ease;
+}
+
+.rotate-cross {
+  transform: rotate(45deg);
+}
+
+.plus-button:hover {
+  background: #202de6;
+}
+
+.go-to-mount-button:hover {
+  background: #202de6;
+}
+
+.go-to-mount-button {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  font-size: 20px;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.add-event-button {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  font-size: 17px;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.popup-menu {
+  display: none;
+  background-color: #fff;
+  padding: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  z-index: 1;
+  justify-self: flex-end;
+  transition: transform 1s ease;
+}
+
+.input-container {
+  display: flex;
+  align-items: center;
+  justify-content:space-evenly;
+}
+/* .input-label{
+  font-size: medium;
+  width: 100px;
+} */
+
+.input-field,
+.dropdown,
+.radio-group {
+  margin: 8px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  flex-grow: 1;
+}
+
+@media (min-width: 600px) {
+  .plus-button {
+    width: 40px;
+    height: 40px;
+  }
+}

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="theme-color" content="#dfe2e8"> <!--PWA-->
+    <title>Watchdog smart timetracker</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/icon-library.css">
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/UnderCalendarSpace.css">
+    <link rel="stylesheet" href="css/darkmode-switch.css">
+    <script src="js/main.js"></script>
+    <script src="js/ScriptCreateCalendar.js"></script>
+    <script src="js/Darkmode.js"></script>
+
+    <!-- PWA -->
+    <link href="manifest.json" rel="./manifest"/>
+    <link href="images/Logo.png" rel="watchdog-icon">
+</head>
+
+<body>
+    <header class="main-header">
+        <div class="menu-btn-container" onclick="toggle_sidebar()" id="Sidebar_button">
+            <div class="menu-button">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        <div class="logo-container logo-image">
+            <!-- <img src="images/Logo_resize_WithText.png" alt="Logo"> -->
+        </div>
+        <div class="button-container">
+            <button class="header_button" id="TodayBtn">Today</button>
+            <!-- <div class="search-date-bar-container"> 1st pop up; Datum -->
+            <button class="datumssuche" onclick="search_pop_up_date()">Datumssuche</button>
+            <div class="popup_datum_search" id="popup_datum_search" style="display: none">
+                <div class="date-popup_display">
+                    <div class="datum_popup_header">
+                        <h4 class="datum_popup_ueberschrift"> Datumsuche</h4>
+                        <button class="schließen" onclick="search_popup_close()"> X </button>
+                    </div>
+                    <div class="eingabeaufforderung">
+                        Bitte das gewünschte Datum eingeben:
+                    </div>
+                    <input type="date" id="date-input">
+                    <button id="go-to-date-button">zum Datum navigieren</button>
+                </div>
+            </div>
+            <!-- </div> -->
+            <!-- <div class="search-event-bar-container"> -->
+            <!-- 2nd pop up; Event -->
+            <button class="Ereignissuche" onclick="search_pop_up_event()">Ereignisfilter</button>
+            <div class="popup_event_search" id="popup_event_search">
+                <h4> Eventsuche</h4>
+                <button class="schließen" onclick="search_popup_close()"> X</button>
+            </div>
+            <!-- </div> -->
+        </div>
+    </header>
+
+
+
+    <div class="container">
+
+        <nav class="sidebar-menu" id="Sidebar">
+            <h4 class="sidebar-text">Menu</h4>
+            <button class="sidebar-close" onclick="toggle_sidebar()">Close ☰</button>
+            <div class="sidebar-text"><button id="heatmapBtn">
+                 <i class="heatmap-icon sidebar-icon"></i>
+                 Heatmap</button></div> <!--Slider hinzufügen-->
+            <div class="sidebar-text"><button onclick="toggle_progress_popup()">Fortschritt</button></div>
+            <div class="sidebar-text">
+                <p class="veranstaltungen">Veranstaltungen
+                    <button class="dropbtn veranstaltungen" onclick="toggle_veranstaltung_dropdown()">
+                        <i class="dropdown-arrow-icon sidebar-icon"></i>
+                    </button>
+                    <button class="plus-icon veranstaltungen sidebar-icon" onclick="toggle_edit_veranstaltung_popup()"></button>
+                </p>
+                <div class="dropdown-container" >
+                    <div id="veranstaltungDropdownContent">
+                        <p class="toggle-settings"><i class="label-icon sidebar-icon"></i>Statistik
+                            <button class="settings-icon" onclick="toggle_edit_veranstaltung_popup()"></button></p>
+                    </div>
+
+                    <p id="newVeranstaltung"><label for="inputVeranstaltung"></label>
+                        <input class="newVeranstaltung" type="text" id="inputVeranstaltung"  placeholder="Veranstaltung"></p>
+                </div>
+
+
+                <div>    <!-- toggle für den darkmode -->
+                    <p> Anzeigemodus wechseln </p>
+                    <label class="display-mode" for="darkmodeToggle" >
+                        <input type="checkbox" id="darkmodeToggle"  onchange="switch_between_modes()">
+                        <span class="slider"></span>
+                    </label>
+                    </div>
+            </div>
+        </nav>
+
+        <div class="main-content">
+            <div>
+                <main>
+                    <section class="calendar">
+                        <div class="calendar-header">
+                            <button id="prevMonth">&lt;</button>
+                            <h2 id="currentMonthYear">Month Year</h2>
+                            <button id="nextMonth">&gt;</button>
+                        </div>
+
+                        <table id="calendarTable">
+                            <!-- Calendar content will be dynamically generated here -->
+                        </table>
+                    </section>
+
+                    <section class="event-sidebar">
+                        <h2>Event List</h2>
+                        <div id="eventListContainer" class="eventListContainer"></div>
+                        <!-- Event items will be dynamically generated here -->
+                    </section>
+                </main>
+
+                <div class="under-calendar-container">
+
+                    <div class="plus-button" id="plus-button">+</div>
+                </div>
+                <!-- Pop up Menu for adding Event -->
+                <div class="popup-menu" id="popupMenu">
+                 <!-- Date input -->
+                    <div class="input-container">
+                        <label for="Datum" class="input-label">Datum</label>
+                        <input type="text" id="eventDate" class="input-field" placeholder="YYYY-MM-DD">
+                    </div>
+                    <!-- Kategorie input -->
+                    <div class="input-container">
+                        <label for="Kategorie" class="input-label">Kategorie:</label>
+                        <select id="eventType" class="dropdown">
+                            <option value="option1">Veranstaltung</option>
+                            <option value="option2">Selbststudium</option>
+                            <option value="option3">Übung</option>
+                            <option value="option4">Tutorium</option>
+                            <option value="option4">Other</option>
+                        </select>
+                    </div>
+                    <!-- Veranstaltung Name input -->
+                    <div class="input-container">
+                        <label for="Veranstaltung" class="input-label">Veranstaltung:</label>
+                        <select  id="eventVeranstaltung" class="dropdown">
+                            <option value="default"></option>
+                        </select>
+                    </div>
+                    <!-- Time input -->
+                    <div class="input-container">
+                        <label for="eventTimeFrom" class="input-label">Von:</label>
+                        <input type="text" id="eventTimeFrom" class="input-field" placeholder="HH:MM">
+                        <label for="eventTimeTill" class="input-label">Bis:</label>
+                        <input type="text" id="eventTimeTill" class="input-field" placeholder="HH:MM">
+                    </div>
+                    <!-- Pause checkbox -->
+                    <div class="input-container">
+                        <label for="wasPause" class="input-label">Pause:</label>
+                        <div class="radio-group">
+                            <label><input type="radio" id="wasPauseYes" value="yes"> Yes</label>
+                            <label><input type="radio" id="wasPauseNo" value="no"> No</label>
+                        </div>
+                    </div>
+                    <!-- Pause time -->
+                    <div class="input-container pauseTime">
+                        <label for="pauseTime" class="input-label">Pause Zeit:</label>
+                        <input type="text" id="pauseTime" class="input-field" placeholder="HH:MM">
+                    </div>
+
+                    <button class="add-event-button" id="addEventBtn">Save Event</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!--    Veranstaltung bearbeiten PopUp-->
+    <div class="edit-popup" id="editVeranstaltung">
+        <div class="edit-popup-content">
+            <p class="heading">Veranstaltung bearbeiten</p>
+            <button class="popup-close" onclick="toggle_edit_veranstaltung_popup()">×</button>
+
+            <label class="inputlabel" for="inputName">Veranstaltung Name:</label>
+            <input class="editVeranstaltung" type="text" id="inputName" placeholder="Neuer Name">
+            <label class="inputlabel" for="inputTime">Gesamtzeit der Veranstaltung</label>
+            <input class="editVeranstaltung" type="number" id="inputTime" placeholder="Zeit in Stunden">
+            <label class="inputlabel" for="inputSemester">Semester der Veranstaltung</label>
+
+            <input class="editVeranstaltung" type="number" id="inputSemester" placeholder="Semester">
+
+            <div class="popup-footer">
+                <button class="delete-icon" onclick="deleteEvent()"></button>
+                <button class="popup-cancel" onclick="cancel_edit_event()">Abbrechen</button>
+                <button class="popup-save" onclick="editEvent()">Speichern</button>
+            </div>
+        </div>
+    </div>
+
+<!--Fortschritt anzeigen-->
+    <div id="progress-popup">
+        <div class="progress-popup-content">
+            <p class="heading">Veranstaltungsfortschritte</p>
+            <button class="popup-close" onclick="toggle_progress_popup()">×</button>
+         <div id="progress-popup-content">
+
+            <!-- <label class="progresslabel" for="statistik">Statistik:</label>
+            <p class="progress-numbers">32/100</p>
+            <progress id="statistik" value="32" max="100"> 32% </progress>
+
+            <label class="progresslabel" for="prog3">ProgIII:</label>
+            <progress id="prog3" value="44" max="100"> 32% </progress>
+
+            <label class="progresslabel" for="dmds">DMDS:</label>
+            <progress id="dmds" value="12" max="100"> 32% </progress> -->
+            </div>
+                <div class="popup-footer">
+                <button class="popup-save" onclick="toggle_progress_popup()">Okay</button>
+             </div>
+        </div>
+    </div>
+
+
+</body>
+
+</html>

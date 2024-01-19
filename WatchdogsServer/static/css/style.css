@@ -1,0 +1,453 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    
+}
+
+body{
+    background-color:  hsl(67, 43%, 96%);
+}
+
+html, body, nav, .fullside, .sidebar-menu, .container {
+    height: 100%;
+}
+
+button {
+    display: inline-block;
+    background-color: transparent;
+    border: 0;
+    margin-top: 16px;
+    margin-bottom: 16px;
+}
+
+.sidebar-text button {
+    color: hsl(0, 0%, 7%);
+    text-decoration: none;
+    margin: 4px 0 0;
+    padding: 0;
+    font-size: 1rem;
+}
+
+p, h4, button {
+    display: inline-block;
+    color: black; 
+}
+
+h2{
+    color:black;
+}
+
+a:hover, button:hover, .hover {
+    background-color: #e3e1e1;
+    border-radius: 99999px;
+}
+
+
+.container {
+    flex-grow: 1;
+    display: flex;
+    align-items: flex-start;
+}
+
+/*Sidebar*/
+.sidebar-menu {
+    width: 200px;
+    box-shadow: 0 2px 5px 0 #00000028;
+    display: none;
+    align-items: flex-start;
+    background-color: rgb(226, 115, 59);
+}
+
+.sidebar-text {
+    margin-left: 5px;
+    position: relative;
+}
+
+.sidebar-close {
+    float: right;
+}
+
+#veranstaltungDropdownContent,
+#newVeranstaltung{
+    display: none;
+}
+
+.dropdown-container p {
+    margin: 2px;
+    padding-left: 18px;
+    color: #292929;
+    display: block;
+}
+
+.veranstaltungen {
+    margin-top: 15px;
+    margin-bottom: 0;
+}
+
+.newVeranstaltung {
+    background-color: transparent;
+    border-radius: 8px;
+    border-color: black;
+}
+
+
+
+/*Veranstaltung bearbeiten/fortschritt PopUp*/
+.edit-popup, #progress-popup {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.edit-popup-content, .progress-popup-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 35%;
+    height: 35%;
+    border-radius: 4px;
+    position: relative;
+    overflow: auto;
+}
+
+.editVeranstaltung {
+    display: block;
+    width: 50%;
+    margin: 2.5px 2.5px 9px;
+}
+
+.inputlabel, .progresslabel {
+    color: #5f6368;
+    font-size: 0.875rem;
+    line-height: 20px;
+}
+
+.inputlabel {
+    display: block;
+}
+
+.popup-close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    display: inline-block;
+    margin: 0;
+}
+
+.popup-close:hover,
+.popup-close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.popup-footer {
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin-right: 20px;
+}
+
+.popup-save, .popup-cancel {
+    cursor: pointer;
+    height: 36px;
+    width: 80px;
+    padding: 0 8px;
+    border-radius: 99999px;
+    float: right;
+    display: inline-block;
+}
+
+.popup-save {
+    color: #ffffff;
+    font-weight: bold;
+    background-color: #1a73e8;
+}
+
+.popup-cancel {
+    color: #444746;
+    /*font-weight: bold;*/
+    background-color: transparent;
+}
+
+.progress-numbers {
+    color: #5f6368;
+    font-size: 0.875rem;
+    line-height: 20px;
+    display: inline-block;
+    margin: 0;
+    float: right;
+}
+
+progress {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+
+
+.main-content {
+    display: flex;
+    flex-grow: 1;
+    justify-content: center;
+    /*align-items: center;*/
+    padding-top: 6%;
+}
+
+main {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 2rem;
+    width: 100%;
+    max-width: 1250px;
+    /* Adjust the maximum width as needed */
+    margin: 0 auto;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.calendar {
+    width: 100%;
+}
+
+#calendarTable {
+    table-layout: fixed;
+    border-collapse: collapse;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#calendarTable td{
+    vertical-align: top;
+    color: black;
+    /* background-color: #cdcccc; */
+}
+
+th, tr, td {
+    border: 1px solid lightgrey;
+    width: 14.29%;
+    /*height: 16.67%;*/
+    height: 55px;
+    /*margin: 20px;*/
+    text-align: center;
+}
+
+th{
+    background-color: #b7b7b7;
+}
+
+#calendarTable td:hover{
+    background-color: lightgrey;
+    opacity: 0.75;
+}
+
+#calendarTable .current-day span{
+    background-color: #FF7B23;
+    border-radius: 50%;
+    height: 20px;
+    width: 20px;
+    display: inline-block;
+    opacity: 0.9;
+    /* Light blue background for the current day */
+}
+
+#calendarTable .selected-day {
+    background-color: #3498db;
+    /* Light blue background for the selected day */
+}
+
+#calendarTable .selected-day:hover{
+    background-color: #3498db;
+  /* if hover on selected day, is also blue */
+}
+
+.event-sidebar {
+    text-align: center;
+    flex-grow: 1;
+    padding: 5px;
+    max-width: 300px;
+    width: 100%;
+    background-color: rgba(169, 169, 169, 0.3);
+    
+
+    /* Adjust the maximum width as needed */
+}
+
+.eventListContainer{
+    background-color: rgba(169, 169, 169, 0.3);
+}
+
+#eventList {
+    list-style: none;
+    padding: 0;
+    
+}
+
+
+/* Such - & Filter pop-ups*/ 
+.popup_datum_search {
+    display:none;
+    width: 20vw;
+    height: 60vh;
+    background-color: #3498db;
+    position: fixed;
+    top: 20%;
+    right:2%;
+    padding: 10px;
+    border-radius:10px;
+}
+
+.date-popup_display{
+    display:flex;
+    flex-direction: column;
+    gap:30px;
+}
+
+
+.popup_event_search {
+    display: none;
+    width: 20vw;
+    height: 60vh;
+    background-color: #3498db;
+    position: fixed;
+    top: 20%;
+    right:2%;
+    padding: 10px;
+    border-radius:10px;
+}
+
+.datum_popup_ueberschrift{
+    width: 15vw;
+    position: relative; 
+    color:rgb(17, 17, 17);
+    left:30%;
+}
+
+.eingabeaufforderung{
+    font-size: 1.7wh;
+    color: rgb(17, 17, 17);
+    text-align: center;
+}
+
+.schließen{
+    width: 2vw;
+    position: relative; 
+    color:rgb(17, 17, 17);
+    margin:10px;
+}
+
+.yellow {
+    background-color: yellow;
+  }
+  
+  .orange {
+    background-color: orange;
+  }
+  
+  .red {
+    background-color: red;
+  }
+
+
+/* ---------------------------------------------------------DARKMODE-----------------------------------------------------------------------------------------------------------*/
+/*MediaQuery for automatic  color scheme preference setting */ 
+@media (prefers-color-scheme: dark) {
+    body.darkmode {
+        background-color: rgb(45, 56, 60);
+    }
+
+    .sidebar-menu.darkmode {
+        background-color:  rgb(25, 36, 40);
+    }
+
+    .calendar-header.darkmode {
+        background-color: rgb(65, 76, 80);
+    }
+
+    h2.darkmode,
+    p.darkmode,
+    h4.darkmode,
+    button.darkmode {
+        color: #e3e1e1;
+    }
+}
+
+/* Manual dark mode via toggle button */
+body.manual-darkmode {
+    background-color: rgb(45, 56, 60);
+}
+
+.sidebar-menu.manual-darkmode {
+    background-color: rgb(25, 36, 40);
+}
+
+.calendar-header.manual-darkmode {
+    background-color: rgb(65, 76, 80);
+}
+
+h2.manual-darkmode,
+p.manual-darkmode,
+h4.manual-darkmode,
+button.manual-darkmode {
+    color: #e3e1e1;
+}
+    
+
+@media (max-width: 670px) {
+    main{ 
+        flex-direction: column;
+}
+
+    body {
+        padding-top: 6%; /* Adjust spacing for the header on mobile */
+    }
+
+    .container {
+        flex-direction: column; /* Stack elements vertically on mobile */
+    }
+
+    .sidebar-menu {
+        width: 100%; /* Take up the full width on mobile */
+    }
+
+    .main-content {
+        padding: 2rem;
+    }
+
+    .calendar-header {
+        width: 100%; /* Adjust width for mobile */
+        text-align: center; /* Center text on mobile */
+    }
+
+    #calendarTable {
+        width: 100%; /* Adjust width for mobile */
+    }
+
+    th, tr, td {
+        width: 100%; /* Adjust width for mobile */
+        box-sizing: border-box; /* Avoid unexpected padding or margin issues */
+    }
+}
+/*---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------/

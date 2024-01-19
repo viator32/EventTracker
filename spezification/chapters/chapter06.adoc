@@ -1,0 +1,12 @@
+== 2.0 Nichtfunktionale Anforderung
+
+=== 2.1 Mengengerüst
+
+[cols="1, 1"]
+|===
+| Beschreibung | Betrag
+|Anzahl der Nutzer | max. 1
+|Anzahl paralleler Veranstaltungen |max. 1
+|Anzahl Einträge pro Tag | max. 20
+|Anzahl Veranstaltungen pro Semester |ca. 12
+|===

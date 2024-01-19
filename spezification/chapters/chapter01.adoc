@@ -1,0 +1,22 @@
+== 1.0 Einleitung
+
+=== 1.1 Anlass
+
+Dieses Dokument dient als Grundlage für die Entwicklung der App "Watchdog smart Timetracker".
+Jegliche Dokumente, die in Zukunft generiert werden, sollen auf den, in diesem Dokument festgelegten Anforderungen basieren.
+
+=== 1.2 Zielsetzung
+
+Das Ziel dieses Projekts ist es, eine smarte Zeiterfassung als Progressive WebApp zu realisieren.
+Die Funktionen der Anwendung beschränken sich nicht nur auf die Zeiterfassung,
+sondern sollen es auch erleichtern den Fortschritt zu tracken.
+
+=== 1.3 Leserkreis
+
+Dieses Dokument richtet sich an ...
+
+- das gesamte Projektteam
+- die Entwickler des Systems
+- Testingenieure
+- Spätere Wartungsteams
+- Mitarbeiter des technischen Supports

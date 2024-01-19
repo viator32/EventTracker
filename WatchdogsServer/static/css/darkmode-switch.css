@@ -1,0 +1,53 @@
+/*box im den Toggle-Knop*/ 
+.display-mode {
+    position: relative;
+    display: inline-block;
+    width: 70%;
+    height: 34%;
+  }
+  
+  /* Die eigentliche Checkbox verstecken */
+  .display-mode input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  /* Der Toggle Knopf*/
+  .slider {
+    height:80%;
+    width:34%;
+    position: absolute;
+    cursor: pointer;
+    background-color: #ccc;
+    transition-duration: 0.4s;
+    -webkit-transition-duration: 0.4s;           /*für Safari, da wir mac benutzen*/ 
+    border-radius: 34%;
+  }
+  
+  /* Default Zustand des Knopfes*/ 
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 50%;
+    width: 50%;
+    left: 4%;
+    bottom: 25%;
+    background-color: white;
+    -webkit-transition: background-color 2s;        /*für Safari, da wir mac benutzen*/ 
+    transition: background-color 2s;
+    border-radius: 50%;
+  }
+  
+  input:checked + .slider {
+    background-color: rgb(133, 133, 243);
+  }
+  
+  input:focus + .slider {
+    box-shadow: 0 0 1px rgb(133, 133, 243)
+  }
+  
+  input:checked + .slider:before {
+    -webkit-transform: translateX(86%);         /*für Safari, da wir mac benutzen*/ 
+    transform: translateX(86%);
+  }
