@@ -1,12 +1,6 @@
 const cacheName = 'v1';
 
-const permanentCacheAssets = ["./images/Logo.png",
-    "./images/Logo_resize.png",
-    "./images/heatmap-icon.png",
-    "./images/label-icon.png",
-    "./images/plus-icon.png"];
-
-const changingCacheAssets = [
+const cacheAssets = [
     "./",
     "./js/main.js",
     "./js/ScriptCreateCalendar.js",
@@ -16,67 +10,58 @@ const changingCacheAssets = [
     "./css/icon-library.css",
     "./css/popup.css",
     "./css/style.css",
-    "./css/UnderCalendarSpace.css",];
+    "./css/UnderCalendarSpace.css",
+    "./images/Logo.png",
+    "./images/Logo_resize.png",
+    "./images/heatmap-icon.png",
+    "./images/label-icon.png",
+    "./images/plus-icon.png",
+    "./images/delete-icon.png",
+    "./images/dropdown_arrow-grey.png",
+    "./images/dropdown_arrow.png",
+    "./images/heatmap-icon-grey.png",
+    "./images/label-icon-grey.png",
+    "./images/plus-icon-grey.png",
+    "./images/progress-icon.png",
+    "./images/progress-icon-grey.png",
+    "./images/settings-icon.png",
+    "./images/settings-icon-grey.png"
+];
+
+
 
 //Service Worker Install Event
 self.addEventListener("install", e => {
     console.log('Service Worker Installed');
     e.waitUntil(
         caches.open(cacheName).then(cache => {
-            return cache.addAll([...permanentCacheAssets, ...changingCacheAssets]);
+            return cache.addAll(cacheAssets);
         } )
     );
 });
 
 
-
 //Service Worker Activate Event
 self.addEventListener('activate', e=> {
     console.log('Service Worker Activated');
+    //Remove old caches
+    e.waitUntil(caches.keys().then(cacheNames => {
+        return Promise.all(
+            cacheNames.map(cache => {
+                if(cache !== cacheName){
+                    console.log('Service Worker cleanes old cache');
+                    return caches.delete(cache);
+                }
+            })
+        )
+    }))
 });
 
 
 //Fetch Event
 self.addEventListener('fetch', e => {
     console.log("fetch Event");
-    e.respondWith(
-        caches.open('v2').then(cache => {
-            return cache.match(e.request).then(response => {
-                if (response) {
-                    console.log("found in v2");
-                    // v2 im Cache gefunden
-                    return response;
-                } else {
-                    // suche in v1, weil nicht in v2 gefunden
-                    return caches.open('v1').then(cache => {
-                        return cache.match(e.request).then(response => {
-                            if (response) {
-                                console.log("found in v1");
-                                // v1 wird verwendet
-                                return response;
-                            } else {
-                                console.log("needed network");
-                                // nicht gefunden wird vom Netzwerk geholt
-                                return fetch(e.request);
-                            }
-                        });
-                    });
-                }
-            });
-        })
-    );
-});
-
-
-
-
-
-self.addEventListener('message', event => {
-    console.log("got message");
-    if (event.data.command === 'updateCache') {
-        console.log("updated Cache");
-        caches.open('v2').then(cache => {
-            return cache.addAll(changingCacheAssets);
-        });
-    }
+    caches.match(e.request).then(response => {
+        return response || fetch(e.request);
+    })
 });

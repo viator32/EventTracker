@@ -1,3 +1,27 @@
+var events = [
+    {id: "_xy1z2abc",date: "2024-01-05",eventtype: "", veranstaltung:"Test",from:"12:20",till: "12:30",waspause: "yes",pausetime: "4:30" },
+];
+
+function calculateTimeSpent(event) {
+    // Convert start and end times to Date objects
+    const startTime = parseTime(event.from);
+    const endTime = parseTime(event.till);
+    const pauseTime = parseTime(event.pausetime);
+
+    // Calculate the time difference in milliseconds
+    let timeDifference = endTime - startTime - pauseTime;
+
+    // Convert time difference to minutes
+    const timeSpentMinutes = Math.floor(timeDifference / (1000 * 60));
+
+    return timeSpentMinutes;
+}
+
+// Helper function to parse time string and return time in milliseconds
+function parseTime(timeString) {
+    const [hours, minutes] = timeString.split(':').map(Number);
+    return hours * 60 * 60 * 1000 + minutes * 60 * 1000;
+}
 
 document.addEventListener("DOMContentLoaded", function () {
     const calendarTable = document.getElementById('calendarTable');
@@ -13,13 +37,9 @@ document.addEventListener("DOMContentLoaded", function () {
     let selectedCell = null;
     let currentDay = null;
 
-    
-    fetchEvents(); //add saved events from the csv file
     fetchVeranstaltungen(); //add saved veranstaltungen from the csv file
+    fetchEvents(); //add saved events from the csv file
 
-    var events = [
-         {id: "_xy1z2abc",date: "2024-01-05",eventtype: "", veranstaltung:"Test",from:"12:20",till: "12:30",waspause: "yes",pausetime: "4:30" },
-    ];
 
     function generateUniqueId() {
         return '_' + Math.random().toString(36).substring(2, 9);
@@ -38,7 +58,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const currentDate = new Date();
     let currentMonth = currentDate.getMonth();
     let currentYear = currentDate.getFullYear();
-    function initCalendar() {
+
+    function initCalendar(currentMonth, currentYear) {
 
         // Initial rendering
         renderCalendar(currentMonth, currentYear);
@@ -55,6 +76,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
             renderCalendar(currentMonth, currentYear);
             currentMonthYear.textContent = getMonthName(currentMonth) + ' ' + currentYear;
+            updateProgressBarForAllVeranstaltungen();
         });
 
         nextMonthBtn.addEventListener('click', () => {
@@ -65,6 +87,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
             renderCalendar(currentMonth, currentYear);
             currentMonthYear.textContent = getMonthName(currentMonth) + ' ' + currentYear;
+            updateProgressBarForAllVeranstaltungen();
         });
     }
 
@@ -72,6 +95,12 @@ document.addEventListener("DOMContentLoaded", function () {
     window.addEventListener('resize', function() {
         renderCalendar(currentMonth, currentYear);
     });
+
+    let navbarButton = document.getElementById('Sidebar_button');
+    navbarButton.addEventListener('click', function() {
+        renderCalendar(currentMonth, currentYear);
+    });
+
 
     function renderCalendar(month, year) {
         // Clear the existing calendar
@@ -84,7 +113,11 @@ document.addEventListener("DOMContentLoaded", function () {
         // Create the header row with day names
         const headerRow = calendarTable.insertRow();
         let daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-        let media_width = window.matchMedia("(max-width: 1100px)");
+        let media_width = window.matchMedia("(max-width: 1120px)");
+        let navbar = document.getElementById('Sidebar');
+        if (navbar.style.display == 'block'){
+            media_width = window.matchMedia("(max-width: 1300px)");
+        }
         if (media_width.matches) { // for smaller Windows
             daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
         }
@@ -137,6 +170,14 @@ document.addEventListener("DOMContentLoaded", function () {
         if (selectedDate) {
             renderEventsForDate(selectedDate);
         }
+        let darkmodeToggle = document.getElementById('darkmodeToggle').checked;
+        console.log(darkmodeToggle);
+        if (darkmodeToggle != true && colorScheme == 'dark'){
+            //change darkmode from table elements
+            let element = document.querySelectorAll('#calendarTable span');
+            element.forEach(function(span) {
+                span.classList.toggle("darkmode");},)
+        }
     }
 
     var isHeatmapEnabled = false;
@@ -158,7 +199,7 @@ heatmapBtn.addEventListener('click', toggleHeatmap);
         days.forEach(dayElement => {
             dayElement.classList.remove('yellow', 'orange', 'red');
         });
-            heatmapBtn.textContent =  'Enable Heatmap';
+            // heatmapBtn.textContent =  'Enable Heatmap';
         }
         
     }
@@ -175,11 +216,11 @@ heatmapBtn.addEventListener('click', toggleHeatmap);
             dayElement.classList.remove('yellow', 'orange', 'red');
     
             // Apply new heatmap color based on the number of events
-            if (numberOfEvents >= 1 && numberOfEvents <= 3) {
+            if (numberOfEvents >= 1 && numberOfEvents < 3) {
                 dayElement.classList.add('yellow');
-            } else if (numberOfEvents > 3 && numberOfEvents <= 5) {
+            } else if (numberOfEvents >= 3 && numberOfEvents < 5) {
                 dayElement.classList.add('orange');
-            } else if (numberOfEvents > 5) {
+            } else if (numberOfEvents >= 5) {
                 dayElement.classList.add('red');
             }
         });
@@ -206,7 +247,7 @@ heatmapBtn.addEventListener('click', toggleHeatmap);
         return monthNames[month];
     }
 
-    initCalendar();
+    initCalendar(currentMonth, currentYear);
 
 // --------------------------------------------------------------------------------------------------CALENDAR STUFF--------------------------------------------------------------------------------------
 
@@ -216,37 +257,78 @@ function renderEventsForDate(date) {
     const eventsForDate = events.filter(event => event.date === date);
     const dayEventList = document.createElement('ul');
     dayEventList.classList.add('day-event-list');
+    console.log(date);
 
     eventsForDate.forEach(event => {
-        const li = document.createElement('li');
-        li.className = 'event';  // Add the class 'event'
-        li.dataset.eventVeranstaltung = event.name;  // Set the event name as a dataset attribute
-        li.innerHTML = `${event.veranstaltung} <button class="editEventBtn">Edit</button> <button class="deleteEventBtn" data-event-date="${event.date}">Delete</button>`;
-        dayEventList.appendChild(li);
 
-        const editBtn = li.querySelector('.editEventBtn');
-        // Edit event function
-        editBtn.addEventListener('click', () => {
-            // Call the editEvent function with the clicked event
-            editEvent(event)});
+        var filterContainer = document.getElementById("dropdown-content-display");
+        // Select all checkboxes within the container
+        var checkboxes = filterContainer.querySelectorAll('input[type="checkbox"]');
 
-        const deleteBtn = li.querySelector('.deleteEventBtn');
-        // Add click event listener to delete button
-         
-        deleteBtn.addEventListener('click', () => {
-            // Show confirmation alert
-            const confirmDelete = confirm("Are you sure you want to delete this event?");
-            if (confirmDelete) {
-                // Delete the event
-                deleteEvent(event.id);
-                // Re-render the event list and the calendar
-                renderEventsForDate(event.date);
+        let eventTypeDiv = document.getElementById("eventType");
+        let eventTypesSelected = eventTypeDiv.querySelectorAll("option");
+        console.log(eventTypesSelected);
+
+        let shouldDisplayEvent = true;
+
+        checkboxes.forEach(function(checkbox) {
+            // Check if the checkbox is ticked i.e. checked √
+            if (checkbox.checked) {
+                console.log(checkbox.id + " is checked");
+                console.log(checkbox.id);
+
+                // if chosen filter option corresponds with the type of the event, display
+                eventTypesSelected.forEach(function(option) {
+                    if (option.id === checkbox.id) {
+                        shouldDisplayEvent = true;
+                    }
+                });
             }
         });
+
+        if (shouldDisplayEvent) {
+            const li = document.createElement('li');
+            li.className = 'event';  // Add the class 'event'
+            li.dataset.eventVeranstaltung = event.name;  // Set the event name as a dataset attribute
+            li.innerHTML = `[${event.from} - ${event.till}] - ${event.veranstaltung} <button class="editEventBtn">Edit</button> <button class="deleteEventBtn" data-event-date="${event.date}">Delete</button>`;
+            const editBtn = li.querySelector('.editEventBtn');
+
+            dayEventList.appendChild(li);
+
+            // Edit event function
+            editBtn.addEventListener('click', () => {
+                // Call the editEvent function with the clicked event
+                editEvent(event)
+            });
+
+            const deleteBtn = li.querySelector('.deleteEventBtn');
+            // Add click event listener to delete button
+            deleteBtn.addEventListener('click', () => {
+                // Show confirmation alert
+                const confirmDelete = confirm("Are you sure you want to delete this event?");
+                const timeSpent = calculateTimeSpent(event);
+                if (confirmDelete) {
+                    if (veranstaltungenMap.has(event.veranstaltung)) {
+                        // If the veranstaltung already exists, update its timeSpent value
+                        const existingEvent = veranstaltungenMap.get(event.veranstaltung);
+                        existingEvent.timespent -= timeSpent;
+                    }
+                    updateProgressBar(veranstaltungenMap.get(event.veranstaltung).name,
+                        veranstaltungenMap.get(event.veranstaltung).timespent,
+                        veranstaltungenMap.get(event.veranstaltung).maxtime);
+                    // Delete the event
+                    deleteEvent(event.id)
+                    // Re-render the event list and the calendar
+                    renderEventsForDate(event.date);
+                }
+            });
+        }
     });
+
     eventListContainer.innerHTML = '';
     eventListContainer.appendChild(dayEventList);
 }
+
 
 // <------------------------------------------------------RENDER EVENT LIST FOR DATE---------------------------------------------
 
@@ -280,7 +362,8 @@ calendarTable.addEventListener("click", function (event){
 function deleteEvent(eventId) {
     // Find the index of the event with the specified date
     const index = events.findIndex(event => event.id === eventId);
-
+    const timeSpent = calculateTimeSpent(index);
+        
     // If the event is found, remove it from the events array
     if (index !== -1) {
         events.splice(index, 1);
@@ -314,6 +397,8 @@ function hideEventPopup() {
 todayBtn.addEventListener("click", () => {
     removeClassFromAll("selected-day");
 
+    
+
     const currentDate = new Date();
     const todayYear = currentDate.getFullYear();
     const todayMonth = currentDate.getMonth();
@@ -322,8 +407,7 @@ todayBtn.addEventListener("click", () => {
     currentMonth = todayMonth;
     currentYear = todayYear;
 
-    renderCalendar(todayMonth, todayYear);
-
+    initCalendar(currentMonth, currentYear);
     const todayCell = document.querySelector(`[data-date="${formatDate(todayYear, todayMonth, todayDay)}"]`);
     if (todayCell) {
         todayCell.classList.add('selected-day');
@@ -393,7 +477,7 @@ document.getElementById("go-to-date-button").addEventListener("click", () =>{
                 removeClassFromAll("selected-day");
                 
                 // Funktion aus nextMonthBtn 
-                renderCalendar(searchedMonth, searchedYear);
+                initCalendar(searchedMonth, searchedYear);
                 currentMonthYear.textContent = getMonthName(searchedMonth) + ' ' + searchedYear;
 
             }
@@ -454,13 +538,13 @@ wasPauseYes.addEventListener('change', function () {
 function editEvent(event) {
     // Populate the event popup with the data of the selected event
     document.getElementById('eventDate').value = event.date;
-    document.getElementById('eventType').value = event.type;
+    document.getElementById('eventType').value = event.eventtype;
     document.getElementById('eventVeranstaltung').value = event.veranstaltung;
     document.getElementById('eventTimeFrom').value = event.from;
     document.getElementById('eventTimeTill').value = event.till;
-    document.getElementById('wasPauseYes').checked = event.wasPause == 'yes';
-    document.getElementById('wasPauseNo').checked = event.wasPause == 'no';
-    document.getElementById('pauseTime').value = event.pauseTime;
+    document.getElementById('wasPauseYes').checked = event.waspause === 'yes';
+    document.getElementById('wasPauseNo').checked = event.waspause === 'no';
+    document.getElementById('pauseTime').value = event.pausetime;
 
     // Display the event popup
     showEventPopup(event.date);
@@ -469,40 +553,13 @@ function editEvent(event) {
     document.getElementById('addEventBtn').dataset.editMode = true;
     // Store the ID of the event being edited
     document.getElementById('addEventBtn').dataset.editEventId = event.id;
+    localStorageEditEvent(event);
 }
-
-function calculateTimeSpent(event) {
-    // Convert start and end times to Date objects
-    const startTime = new Date(event.date + ' ' + event.from);
-    const endTime = new Date(event.date + ' ' + event.till);
-
-    // Calculate the time difference in milliseconds
-    let timeDifference = endTime - startTime;
-
-    // If there was a pause, subtract pause time in milliseconds
-    if (event.wasPause === 'yes') {
-        const pauseTime = parseTime(event.pausetime);
-        timeDifference -= pauseTime;
-    }
-
-    // Convert time difference to minutes
-    const timeSpentMinutes = Math.floor(timeDifference / (1000 * 60));
-
-    return timeSpentMinutes;
-}
-
-// Helper function to parse time string and return time in milliseconds
-function parseTime(timeString) {
-    const [hours, minutes] = timeString.split(':').map(Number);
-    return hours * 60 * 60 * 1000 + minutes * 60 * 1000;
-}
-
-
 
 
 function addEvent() {
 
-    let errorcode = 0;
+    let errorCode = 0;
     
     const eventId = document.getElementById('addEventBtn').dataset.editMode === 'true' ?
         document.getElementById('addEventBtn').dataset.editEventId :
@@ -517,20 +574,45 @@ function addEvent() {
     var wasPauseNo = document.getElementById('wasPauseNo').checked;
     var pauseTime = document.getElementById('pauseTime').value;
 
-    // Combine date and time strings
-    var fromDateTime = new Date(eventDate + ' ' + eventTimeFrom);
-    var tillDateTime = new Date(eventDate + ' ' + eventTimeTill);
-
-    // Check if the date and time values are valid
-    if (isNaN(fromDateTime) || isNaN(tillDateTime)) {  //isNaN check if Date not number is -> return alert 
-        errorcode = 1; 
-        alert('Please enter valid date and time.');
-    }
-
     let wasPause = wasPauseYes ? "yes" : (wasPauseNo ? "no" : '');
 
     if (wasPause === "no" || wasPause===''){
         pauseTime = "00:00";
+    }
+
+
+    // Combine date and time strings
+    var fromDateTime = new Date(eventDate + ' ' + eventTimeFrom);
+    var tillDateTime = new Date(eventDate + ' ' + eventTimeTill);
+
+     // Check if the date and time values are valid
+     if (isNaN(fromDateTime) || isNaN(tillDateTime) || fromDateTime >= tillDateTime) {
+        errorCode = 1;
+        alert('Please enter a valid date and time range.');
+    }
+
+    // Check if a valid event type is selected
+    if (eventType === 'default') {
+        errorCode = 2;
+        alert('Please select a valid event type.');
+    }
+
+    // Check if a valid veranstaltung is selected
+    if (eventVeranstaltung === 'default') {
+        errorCode = 3;
+        alert('Please select a valid veranstaltung.');
+    }
+
+    // Check if pause time is valid
+    if ((wasPauseYes || wasPauseNo) && isNaN(parseInt(pauseTime, 10))) {
+        errorCode = 4;
+        alert('Please enter a valid pause time.');
+    }
+
+    // Handle errors
+    if (errorCode !== 0) {
+        alert('Error adding event. Please fix the highlighted issues.');
+        return;
     }
 
     // Create an event object
@@ -544,20 +626,9 @@ function addEvent() {
         waspause: wasPause,
         pausetime: pauseTime,
     };
+    localStorageSaveEvent(newEvent);
 
     const timeSpent = calculateTimeSpent(newEvent);
-
-        if(eventVeranstaltung.value == 'default'){
-    if (veranstaltungenMap.has(newEvent.veranstaltung)) {
-        // If the veranstaltung already exists, update its timeSpent value
-        const existingEvent = veranstaltungenMap.get(newEvent.veranstaltung);
-        existingEvent.timeSpent += timeSpent;
-    }
-
-    updateProgressBar(veranstaltungenMap.get(newEvent.veranstaltung).name,
-    veranstaltungenMap.get(newEvent.veranstaltung).timeSpent,
-    veranstaltungenMap.get(newEvent.veranstaltung).maxTime);
-        }
     
     // Display or use the calculated timeSpent value as needed
     console.log('Time spent on the event:', timeSpent, 'minutes');
@@ -568,6 +639,12 @@ function addEvent() {
 
         // If the event is found, update it in the events array
         if (index !== -1) {
+            if (veranstaltungenMap.has(events[index].veranstaltung)) {
+                const timeSpentprev = calculateTimeSpent(events[index]);
+                // If the veranstaltung already exists, update its timeSpent value
+                const existingEvent = veranstaltungenMap.get(events[index].veranstaltung);
+                existingEvent.timespent -= timeSpentprev;
+            }
             events[index] = newEvent;
             document.getElementById('addEventBtn').dataset.editMode = false;
             document.getElementById('addEventBtn').dataset.editEventId = null;
@@ -577,18 +654,30 @@ function addEvent() {
             console.error('Event not found for ID:', eventId);
         }
     } else {
-        if (errorcode != 0) {
-            alert("Enter Valid Values");
-        } else {
+        if (errorCode == 0) {
             events.push(newEvent);
             clearPopupinput();
             hideEventPopup();
         }
     }
+
+    if(eventVeranstaltung.value !== 'default'){
+        if (veranstaltungenMap.has(newEvent.veranstaltung)) {
+            // If the veranstaltung already exists, update its timeSpent value
+            const existingEvent = veranstaltungenMap.get(newEvent.veranstaltung);
+            existingEvent.timespent += timeSpent;
+        }
+    
+        updateProgressBar(veranstaltungenMap.get(newEvent.veranstaltung).name,
+        veranstaltungenMap.get(newEvent.veranstaltung).timespent,
+        veranstaltungenMap.get(newEvent.veranstaltung).maxtime);
+            }else{return}
+
     postEvents();
 
     // Display events in the console
     console.log('Events:', events);
+    console.log(veranstaltungenMap);
 
    
 
@@ -605,7 +694,6 @@ function addEvent() {
     document.getElementById('wasPauseNo').checked = false;
     document.getElementById('pauseTime').value = '';
     }
-    
     function postEvents() {
         try {
             const response = fetch('api/events/post', {
@@ -620,7 +708,6 @@ function addEvent() {
             console.error('Fetch error:', error);
         } 
     }
-    updateHeatmap();
 
 }
 
@@ -653,9 +740,6 @@ async function fetchEvents() {
         // Update the events array with the fetched data
         events.length = 0; // Clear existing events
         events = events.concat(data);
-        console.log("event length", events.length);
-        console.log(events);
-        console.log("fetch end");
 
         // Render events for the selected date
     } catch (error) {

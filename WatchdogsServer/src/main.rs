@@ -7,6 +7,7 @@ use std::io;
 use std::io::prelude::*;
 use serde::Deserialize;
 use serde::Serialize;
+use serde_json::Value;
 use std::env;
 use std::error::Error;
 use std::io::{prelude::*, Error as IOError};
@@ -27,14 +28,16 @@ struct Event {
 }
 #[derive(Debug, Deserialize, Serialize)]
 struct  Veranstaltung{
-    veranstaltung: String,
-    timeSpent: u32 ,
-    maxTime: u32,
-    semester: u32,
+    name: String,
+    timespent: u32,
+    maxtime: u32,
+    semester: String,
 }
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+
+    
     
 
     HttpServer::new(|| {
@@ -44,6 +47,7 @@ async fn main() -> std::io::Result<()> {
             .service(web::resource("api/events/json").route(web::get().to(get_events_json)))
             .service(web::resource("api/veranstaltungen/post").route(web::post().to(update_veranstaltungen)))
             .service(web::resource("api/veranstaltungen/json").route(web::get().to(get_veranstaltungen_json)))
+            // .service(web::resource("api/import").route(web::post().to(import_file)))
             .service(web::resource("/{filename:.*}").to(static_files))
             // .service(web::resource("api/events/csv").to(get_events_csv))
             
@@ -78,7 +82,6 @@ async fn update_veranstaltungen(veranstaltungen: web::Json<Vec<Veranstaltung>>) 
     save_veranstaltungen(&veranstaltungen);
 
     HttpResponse::Ok().json("Veranstaltungen updated successfully")
-    // Save the veranstaltungen to a file or database
 }
 
 
@@ -86,15 +89,15 @@ async fn update_veranstaltungen(veranstaltungen: web::Json<Vec<Veranstaltung>>) 
 fn save_veranstaltungen(veranstaltungen: &Vec<Veranstaltung>) {
     // Open the CSV file in append mode
     let mut file = File::create("src/veranstaltungen.csv").unwrap();
-    writeln!(file, "veranstaltung,timeSpent,maxTime,semester").unwrap();
+    writeln!(file, "veranstaltung,timespent,maxtime,semester").unwrap();
 
     for veranstaltung in veranstaltungen {
         writeln!(
             file,
             "{},{},{},{}",
-            veranstaltung.veranstaltung,
-            veranstaltung.timeSpent,
-            veranstaltung.maxTime,
+            veranstaltung.name,
+            veranstaltung.timespent,
+            veranstaltung.maxtime,
             veranstaltung.semester
         )
         .unwrap();
@@ -165,21 +168,41 @@ fn read_events() -> Result<Vec<Event>, Box<dyn Error>> {
     // Read the file line by line and parse each line into an Event
     let events: Result<Vec<Event>, Box<dyn Error>> = io::BufReader::new(file)
         .lines()
+        .enumerate() // Enumerate to track line numbers
         .skip(1) // Skip the header line
-        .map(|line| {
-            let line = line?;
-            let fields: Vec<&str> = line.split(',').collect();
+        .map(|(line_number, line)| {
+            match line {
+                Ok(line_content) => {
+                    let fields: Vec<&str> = line_content.split(',').collect();
 
-            Ok(Event {
-        id: fields[0].to_string(),
-        date: fields[1].to_string(),
-        eventtype: fields[2].to_string(),
-        veranstaltung: fields[3].to_string(),
-        from: fields[4].to_string(),
-        till: fields[5].to_string(),
-        waspause: fields[6].to_string(),
-        pausetime: fields[7].to_string(),
-            })
+                    // Check if there are enough fields before accessing them
+                    if fields.len() >= 8 {
+                        Ok(Event {
+                            id: fields[0].to_string(),
+                            date: fields[1].to_string(),
+                            eventtype: fields[2].to_string(),
+                            veranstaltung: fields[3].to_string(),
+                            from: fields[4].to_string(),
+                            till: fields[5].to_string(),
+                            waspause: fields[6].to_string(),
+                            pausetime: fields[7].to_string(),
+                        })
+                    } else {
+                        // Print an error message with line number and content
+                        eprintln!(
+                            "Error at line {}: Insufficient fields - Content: {}",
+                            line_number + 1,
+                            line_content
+                        );
+                        Err(Box::from("Invalid number of fields in CSV line"))
+                    }
+                }
+                Err(err) => {
+                    // Print an error message with line number
+                    eprintln!("Error at line {}: {}", line_number + 1, err);
+                    Err(Box::from(err))
+                }
+            }
         })
         .collect();
 
@@ -207,10 +230,10 @@ fn read_veranstaltungen() -> Result<Vec<Veranstaltung>, Box<dyn Error>> {
             let fields: Vec<&str> = line.split(',').collect();
 
             Ok(Veranstaltung {
-                veranstaltung: fields[0].to_string(),
-                timeSpent: fields[1].parse().unwrap(), // Assuming timeSpent is a u32
-                maxTime: fields[2].parse().unwrap(),  // Assuming maxTime is a u32
-                semester: fields[3].parse().unwrap(),   // Assuming semester is a u32
+                name: fields[0].to_string(),
+                timespent: fields[1].parse().unwrap(), // Assuming timeSpent is a u32
+                maxtime: fields[2].parse().unwrap(),  // Assuming maxTime is a u32
+                semester: fields[3].to_string(),   
             })
         })
         .collect();
@@ -242,11 +265,33 @@ mod tests {
         assert!(events_result.is_ok());
         let events = events_result.unwrap();
 
-       
-
-        // Example: Verify the data of the first event
         assert_eq!(events[0].veranstaltung, "YourExpectedEventName");
         assert_eq!(events[0].date, "YourExpectedDate");
+
+    }
+
+
+    #[test]
+    fn test_read_veranstaltungen() {
+        // Save the original directory
+        let original_dir = std::env::current_dir().unwrap();
+
+        // Change to the directory containing veranstaltungen.csv
+        let veranstaltungen_dir = original_dir.join("veranstaltungen.csv");
+        std::env::set_current_dir(&veranstaltungen_dir).expect("Failed to set current dir");
+
+        // Call read_veranstaltungen to read from veranstaltungen.csv
+        let veranstaltungen_result = read_veranstaltungen();
+
+        // Change back to the original directory
+        std::env::set_current_dir(original_dir).expect("Failed to set current dir");
+
+        // Verify that the function returns the expected result
+        assert!(veranstaltungen_result.is_ok());
+        let veranstaltungen = veranstaltungen_result.unwrap();
+
+        assert_eq!(veranstaltungen[0].name, "YourExpectedVeranstaltungName");
+        assert_eq!(veranstaltungen[0].timespent, 0);
         // Add more assertions as needed
     }
 }

@@ -10,9 +10,9 @@
     <link rel="stylesheet" href="css/header.css">
     <link rel="stylesheet" href="css/UnderCalendarSpace.css">
     <link rel="stylesheet" href="css/darkmode-switch.css">
+    <script src="js/Darkmode.js"></script>
     <script src="js/main.js"></script>
     <script src="js/ScriptCreateCalendar.js"></script>
-    <script src="js/Darkmode.js"></script>
 
     <!-- PWA -->
     <link href="manifest.json" rel="./manifest"/>
@@ -34,29 +34,44 @@
         <div class="button-container">
             <button class="header_button" id="TodayBtn">Today</button>
             <!-- <div class="search-date-bar-container"> 1st pop up; Datum -->
-            <button class="datumssuche" onclick="search_pop_up_date()">Datumssuche</button>
+            <button class="datumssuche" onclick="search_pop_up_date()">Date Search</button>
             <div class="popup_datum_search" id="popup_datum_search" style="display: none">
                 <div class="date-popup_display">
                     <div class="datum_popup_header">
-                        <h4 class="datum_popup_ueberschrift"> Datumsuche</h4>
+                        <h4 class="datum_popup_ueberschrift"> Date Search </h4>
                         <button class="schließen" onclick="search_popup_close()"> X </button>
                     </div>
                     <div class="eingabeaufforderung">
-                        Bitte das gewünschte Datum eingeben:
+                        Please enter the date you would like to navigate to:
                     </div>
                     <input type="date" id="date-input">
-                    <button id="go-to-date-button">zum Datum navigieren</button>
+                    <button id="go-to-date-button">navigate to date</button>
                 </div>
             </div>
-            <!-- </div> -->
-            <!-- <div class="search-event-bar-container"> -->
             <!-- 2nd pop up; Event -->
-            <button class="Ereignissuche" onclick="search_pop_up_event()">Ereignisfilter</button>
-            <div class="popup_event_search" id="popup_event_search">
-                <h4> Eventsuche</h4>
-                <button class="schließen" onclick="search_popup_close()"> X</button>
+            <button class="dropbtn" onclick="open_dropdown_menu()">Eventfilter</button>
+            <div class="dropdown-content" id="dropdown-content" >
+                <div class ="dropdown-content-display" id="dropdown-content-display">
+                    <p> The following checked items will not be displayed:</p>
+                    <div class=" Filterdiv1"  id="Filterdiv1">
+                    <input type="checkbox" id="Lecture"> Lecture </input>
+                    </div>
+                    <div id="VeranstaltungFilter">
+                    </div>
+                    <div class="Filterdiv2" id="Filterdiv2">
+                    <input type="checkbox" id="Self study"> Self study </input>
+                    </div>
+                    <div class="Filterdiv3" id="Filterdiv3">
+                    <input type="checkbox" id="Practice seminar"> Practice seminar </input>
+                    </div>
+                    <div class="Filterdiv4" id="Filterdiv4">
+                    <input type="checkbox" id="Tutorium"> Tutorium </input>
+                    </div>
+                    <div class="Filterdiv5" id="Filterdiv5">
+                    <input type="checkbox" id="Other"> Other </input>
+                    </div>
+                </div>
             </div>
-            <!-- </div> -->
         </div>
     </header>
 
@@ -69,34 +84,55 @@
             <button class="sidebar-close" onclick="toggle_sidebar()">Close ☰</button>
             <div class="sidebar-text"><button id="heatmapBtn">
                  <i class="heatmap-icon sidebar-icon"></i>
-                 Heatmap</button></div> <!--Slider hinzufügen-->
-            <div class="sidebar-text"><button onclick="toggle_progress_popup()">Fortschritt</button></div>
+                 Heatmap</button></div>
+            <div class="sidebar-text"><button onclick="toggle_progress_popup()">
+                <i class="progress-icon sidebar-icon"></i>Progress view </button></div>
+
             <div class="sidebar-text">
-                <p class="veranstaltungen">Veranstaltungen
-                    <button class="dropbtn veranstaltungen" onclick="toggle_veranstaltung_dropdown()">
+                <p class="veranstaltungen">Lectures
+                    <button class="veranstaltungen" onclick="toggle_veranstaltung_dropdown()">
                         <i class="dropdown-arrow-icon sidebar-icon"></i>
                     </button>
-                    <button class="plus-icon veranstaltungen sidebar-icon" onclick="toggle_edit_veranstaltung_popup()"></button>
+                    <button class="sidebar-plus-button" onclick="toggle_new_veranstaltung()">
+                        <i class="plus-icon sidebar-icon veranstaltungen"></i>
+                    </button>
                 </p>
                 <div class="dropdown-container" >
                     <div id="veranstaltungDropdownContent">
-                        <p class="toggle-settings"><i class="label-icon sidebar-icon"></i>Statistik
-                            <button class="settings-icon" onclick="toggle_edit_veranstaltung_popup()"></button></p>
-                    </div>
+<!-- Veranstaltungen                       -->
+                        </div>
 
                     <p id="newVeranstaltung"><label for="inputVeranstaltung"></label>
-                        <input class="newVeranstaltung" type="text" id="inputVeranstaltung"  placeholder="Veranstaltung"></p>
+                        <input class="newVeranstaltung" type="text" id="inputVeranstaltung"  placeholder="Lecture"></p>
                 </div>
 
 
                 <div>    <!-- toggle für den darkmode -->
-                    <p> Anzeigemodus wechseln </p>
+                    <p> Change appearance:</p>
                     <label class="display-mode" for="darkmodeToggle" >
-                        <input type="checkbox" id="darkmodeToggle"  onchange="switch_between_modes()">
+                        <input type="checkbox" id="darkmodeToggle"  onchange="switch_between_modes(); mode_switch_without_initial()">
                         <span class="slider"></span>
                     </label>
                     </div>
             </div>
+
+
+<!--            <div class="sidebar-text">-->
+<!--                <p>Import</p>-->
+<!--                <div><label  for="inputFile" class="inputFile">Select File</label>-->
+<!--                    &lt;!&ndash;            accept&ndash;&gt;-->
+<!--                    <input type="file" id="inputFile"></div>-->
+<!--                <div><button >Export</button></div>-->
+<!--                <div class="preview">-->
+<!--                    <p>No file selected for upload</p>-->
+<!--                </div>-->
+
+<!--                <div>-->
+<!--                    <button>Submit</button>-->
+<!--                </div>-->
+<!--            </div>-->
+
+
         </nav>
 
         <div class="main-content">
@@ -129,32 +165,32 @@
                 <div class="popup-menu" id="popupMenu">
                  <!-- Date input -->
                     <div class="input-container">
-                        <label for="Datum" class="input-label">Datum</label>
+                        <label for="Datum" class="input-label">Date</label>
                         <input type="text" id="eventDate" class="input-field" placeholder="YYYY-MM-DD">
                     </div>
                     <!-- Kategorie input -->
                     <div class="input-container">
-                        <label for="Kategorie" class="input-label">Kategorie:</label>
+                        <label for="Kategorie" class="input-label">Cathegorie:</label>
                         <select id="eventType" class="dropdown">
-                            <option value="option1">Veranstaltung</option>
-                            <option value="option2">Selbststudium</option>
-                            <option value="option3">Übung</option>
-                            <option value="option4">Tutorium</option>
-                            <option value="option4">Other</option>
+                            <option value="option1" id="Lecture">Lecture</option>
+                            <option value="option2" id="Self study">Self study</option>
+                            <option value="option3"id="Practice seminar">Practice seminar</option>
+                            <option value="option4" id="Tutorium">Tutorium</option>
+                            <option value="option4" id="Other">Other</option>
                         </select>
                     </div>
                     <!-- Veranstaltung Name input -->
                     <div class="input-container">
-                        <label for="Veranstaltung" class="input-label">Veranstaltung:</label>
+                        <label for="Veranstaltung" class="input-label">Lecture:</label>
                         <select  id="eventVeranstaltung" class="dropdown">
                             <option value="default"></option>
                         </select>
                     </div>
                     <!-- Time input -->
                     <div class="input-container">
-                        <label for="eventTimeFrom" class="input-label">Von:</label>
+                        <label for="eventTimeFrom" class="input-label">From:</label>
                         <input type="text" id="eventTimeFrom" class="input-field" placeholder="HH:MM">
-                        <label for="eventTimeTill" class="input-label">Bis:</label>
+                        <label for="eventTimeTill" class="input-label">To:</label>
                         <input type="text" id="eventTimeTill" class="input-field" placeholder="HH:MM">
                     </div>
                     <!-- Pause checkbox -->
@@ -167,7 +203,7 @@
                     </div>
                     <!-- Pause time -->
                     <div class="input-container pauseTime">
-                        <label for="pauseTime" class="input-label">Pause Zeit:</label>
+                        <label for="pauseTime" class="input-label">Pause Time:</label>
                         <input type="text" id="pauseTime" class="input-field" placeholder="HH:MM">
                     </div>
 
@@ -192,7 +228,7 @@
             <input class="editVeranstaltung" type="number" id="inputSemester" placeholder="Semester">
 
             <div class="popup-footer">
-                <button class="delete-icon" onclick="deleteEvent()"></button>
+                <button class="delete-icon" onclick="deleteVeranstaltung()"></button>
                 <button class="popup-cancel" onclick="cancel_edit_event()">Abbrechen</button>
                 <button class="popup-save" onclick="editEvent()">Speichern</button>
             </div>
@@ -217,8 +253,25 @@
             <progress id="dmds" value="12" max="100"> 32% </progress> -->
             </div>
                 <div class="popup-footer">
-                <button class="popup-save" onclick="toggle_progress_popup()">Okay</button>
+                    <button class="popup-cancel" onclick="toggle_monthly_progress_popup()">Ansicht wechseln</button>
+                    <button class="popup-save" onclick="toggle_progress_popup()">Okay</button>
              </div>
+        </div>
+    </div>
+
+<!--Fortschritt in Monaten-->
+    <div id="monthly-progress-popup">
+        <div class="progress-popup-content">
+            <p class="heading">Monatliche Fortschritte</p>
+            <button class="popup-close" onclick="toggle_monthly_progress_popup()">×</button>
+            <div id="monthly-progress-popup-content">
+
+
+            </div>
+            <div class="popup-footer">
+                <button class="popup-cancel" onclick="toggle_progress_popup()">Ansicht wechseln</button>
+                <button class="popup-save" onclick="toggle_monthly_progress_popup()">Okay</button>
+            </div>
         </div>
     </div>
 

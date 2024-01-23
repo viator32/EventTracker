@@ -7,8 +7,7 @@
 
 .plus-icon {
     background-image: url(../images/plus-icon.png);
-    position: absolute;
-    right: 0;
+    margin: 0;
 }
 
 .heatmap-icon {
@@ -57,4 +56,41 @@
     width: 3rem;
     height: 3rem;
     background-repeat: no-repeat;
+}
+
+.progress-icon {
+    background-image: url(../images/progress-icon.png);
+}
+
+@media (max-width: 670px) {
+    .sidebar-plus-button{
+        left: 180px;
+        right: unset;
+    }
+}
+
+
+/*Darkmode Icons*/
+.plus-icon.darkmode {
+    background-image: url(../images/plus-icon-grey.png);
+}
+
+.heatmap-icon.darkmode {
+    background-image: url(../images/heatmap-icon-grey.png);
+}
+
+.label-icon.darkmode {
+    background-image: url(../images/label-icon-grey.png);
+}
+
+.dropdown-arrow-icon.darkmode {
+    background-image: url(../images/dropdown_arrow-grey.png);
+}
+
+.settings-icon.darkmode {
+    background-image: url(../images/settings-icon-grey.png);
+}
+
+.progress-icon.darkmode {
+    background-image: url(../images/progress-icon-grey.png);
 }

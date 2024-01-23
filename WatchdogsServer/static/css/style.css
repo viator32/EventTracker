@@ -34,7 +34,7 @@ p, h4, button {
     color: black; 
 }
 
-h2{
+h2, i{
     color:black;
 }
 
@@ -52,7 +52,7 @@ a:hover, button:hover, .hover {
 
 /*Sidebar*/
 .sidebar-menu {
-    width: 200px;
+    min-width: 180px;
     box-shadow: 0 2px 5px 0 #00000028;
     display: none;
     align-items: flex-start;
@@ -89,12 +89,18 @@ a:hover, button:hover, .hover {
     background-color: transparent;
     border-radius: 8px;
     border-color: black;
+    width: 140px;
+}
+
+.sidebar-plus-button {
+    position: absolute;
+    right: 0;
 }
 
 
 
 /*Veranstaltung bearbeiten/fortschritt PopUp*/
-.edit-popup, #progress-popup {
+.edit-popup, #progress-popup, #monthly-progress-popup {
     display: none;
     position: fixed;
     z-index: 1;
@@ -154,10 +160,8 @@ a:hover, button:hover, .hover {
     display: flex;
     justify-content: right;
     align-items: center;
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    margin-right: 20px;
+    position: relative;
+
 }
 
 .popup-save, .popup-cancel {
@@ -194,6 +198,17 @@ a:hover, button:hover, .hover {
 progress {
     width: 100%;
     margin-bottom: 10px;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.inputFile {
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
 }
 
 
@@ -261,6 +276,10 @@ th{
 #calendarTable td:hover{
     background-color: lightgrey;
     opacity: 0.75;
+}
+
+#calendarTable span{
+    color: black;
 }
 
 #calendarTable .current-day span{
@@ -359,15 +378,45 @@ th{
 }
 
 .yellow {
-    background-color: yellow;
+    opacity: 0.9;
+    background-color: #a03232;
   }
   
   .orange {
-    background-color: orange;
+    background-color: #b10002;
   }
   
   .red {
-    background-color: red;
+    background-color: #ff0306;
+  }
+
+  #prevMonth {
+    background-color: #3498db;
+    color: white;
+    font-size: 15px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  
+  #nextMonth{
+    background-color: #3498db;
+    color: white;
+    font-size: 15px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   }
 
 
@@ -382,38 +431,58 @@ th{
         background-color:  rgb(25, 36, 40);
     }
 
+    .main-header.darkmode{
+        background-color:rgb(25, 36, 40);
+    }
+
     .calendar-header.darkmode {
         background-color: rgb(65, 76, 80);
     }
 
+    #newVeranstaltung input.darkmode{
+        color: white;
+        border-color: #cccccc;
+    }
+
+
     h2.darkmode,
     p.darkmode,
+    button.darkmode,
     h4.darkmode,
-    button.darkmode {
+    #calendarTable span.darkmode,
+    #veranstaltungDropdownContent p.darkmode{
         color: #e3e1e1;
     }
 }
 
-/* Manual dark mode via toggle button */
-body.manual-darkmode {
-    background-color: rgb(45, 56, 60);
-}
+/*!* Manual dark mode via toggle button *!*/
+/*body.manual-darkmode {*/
+/*    background-color: rgb(45, 56, 60);*/
+/*}*/
 
-.sidebar-menu.manual-darkmode {
-    background-color: rgb(25, 36, 40);
-}
+/*.sidebar-menu.manual-darkmode {*/
+/*    background-color: rgb(25, 36, 40);*/
+/*}*/
 
-.calendar-header.manual-darkmode {
-    background-color: rgb(65, 76, 80);
-}
+/*.calendar-header.manual-darkmode {*/
+/*    background-color: rgb(65, 76, 80);*/
+/*}*/
 
-h2.manual-darkmode,
-p.manual-darkmode,
-h4.manual-darkmode,
-button.manual-darkmode {
-    color: #e3e1e1;
-}
-    
+/*h2.manual-darkmode,*/
+/*p.manual-darkmode,*/
+/*h4.manual-darkmode,*/
+/*button.manual-darkmode {*/
+/*    color: #e3e1e1;*/
+/*}*/
+
+/*.main-header.darkmode{*/
+/*    background-color:rgb(25, 36, 40);*/
+/*}*/
+
+/*.main-header button.darkmode{*/
+/*    background-color: rgb(7,132,181);*/
+/*}*/
+
 
 @media (max-width: 670px) {
     main{ 
